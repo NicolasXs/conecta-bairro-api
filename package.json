@@ -4,6 +4,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun run --watch src/index.ts",
+    "start": "node dist/index.js",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
@@ -11,6 +12,7 @@
     "db:seed": "bun run src/db/seed.ts"
   },
   "dependencies": {
+    "@elysiajs/node": "^1.4.5",
     "@elysiajs/openapi": "^1.4.14",
     "better-auth": "^1.4.20",
     "dotenv": "^17.3.1",
