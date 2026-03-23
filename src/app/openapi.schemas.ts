@@ -188,10 +188,6 @@ export const deleteMediaResponseSchema = z
   })
   .describe("Resposta padrão para remoção bem-sucedida de uma foto.");
 
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : `http://localhost:${process.env.PORT ?? 3000}`;
-
 export const openApiDocumentation = {
   info: {
     title: "API de Marketplace de Serviços",
@@ -227,10 +223,8 @@ export const openApiDocumentation = {
   ],
   servers: [
     {
-      url: baseUrl,
-      description: process.env.VERCEL_URL
-        ? "Servidor de produção (Vercel)."
-        : "Servidor local de desenvolvimento.",
+      url: "http://localhost:3000",
+      description: "Servidor local de desenvolvimento.",
     },
   ],
   components: {
