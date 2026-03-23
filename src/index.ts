@@ -40,7 +40,12 @@ const app = new Elysia()
       code: "INTERNAL_SERVER_ERROR",
       message: "Erro interno do servidor.",
     };
-  })
-  .listen(3000);
+  });
 
-console.log(`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`);
+export default app;
+
+// Desenvolvimento local: escuta quando executado diretamente
+if (import.meta.main) {
+  app.listen(3000);
+  console.log(`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`);
+}
