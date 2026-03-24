@@ -190,7 +190,7 @@ export const deleteMediaResponseSchema = z
 
 export const openApiDocumentation = {
   info: {
-    title: "API de Marketplace de Serviços",
+    title: "API Conecta Bairro",
     version: "1.0.50",
     description:
       "API RESTful para cadastro de usuários, publicação de serviços, avaliações e portfólio de workers. Todos os endpoints seguem o prefixo /api/v1 e usam JSON como formato padrão.",
