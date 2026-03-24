@@ -31,24 +31,24 @@ export const categorySchema = z
 export const serviceSchema = z
   .object({
     id: z.string().describe("Identificador único do serviço."),
-    workerId: z.string().describe("Identificador do worker responsável pelo serviço."),
+    workerId: z.string().describe("Identificador do prestador responsável pelo serviço."),
     workerName: z
       .string()
       .min(2)
       .max(100)
       .describe("Nome do trabalhador responsável pelo serviço."),
     category: z.string().min(2).max(80).describe("Categoria principal do serviço."),
-    neighborhood: z.string().min(2).max(120).describe("Bairro atendido pelo worker."),
+    neighborhood: z.string().min(2).max(120).describe("Bairro atendido pelo prestador."),
     title: z.string().min(2).max(120).describe("Título curto usado na listagem."),
     description: z.string().min(2).max(500).describe("Descrição detalhada do serviço oferecido."),
     createdAt: z.date().describe("Data de publicação do serviço."),
   })
-  .describe("Anúncio de serviço publicado por um worker.");
+  .describe("Anúncio de serviço publicado por um prestador.");
 
 export const ratingSchema = z
   .object({
     id: z.string().describe("Identificador único da avaliação."),
-    workerId: z.string().describe("Worker avaliado."),
+    workerId: z.string().describe("Prestador avaliado."),
     clientId: z.string().describe("Cliente autor da avaliação."),
     score: z.number().int().min(1).max(5).describe("Nota de 1 a 5."),
     comment: z
@@ -58,16 +58,16 @@ export const ratingSchema = z
       .describe("Comentário opcional sobre a experiência com o serviço."),
     createdAt: z.date().describe("Data em que a avaliação foi criada."),
   })
-  .describe("Avaliação feita por um cliente para um worker.");
+  .describe("Avaliação feita por um cliente para um prestador.");
 
 export const mediaPhotoSchema = z
   .object({
     id: z.string().describe("Identificador único da foto."),
-    workerId: z.string().describe("Worker dono da foto do portfólio."),
+    workerId: z.string().describe("Prestador dono da foto do portfólio."),
     url: z.url().describe("URL pública da imagem armazenada."),
     createdAt: z.date().describe("Data de inclusão da foto no portfólio."),
   })
-  .describe("Foto de portfólio publicada por um worker.");
+  .describe("Foto de portfólio publicada por um prestador.");
 
 export const registerBodySchema = z
   .object({
@@ -138,7 +138,7 @@ export const serviceListQuerySchema = z
 
 export const createRatingBodySchema = z
   .object({
-    workerId: z.string().uuid().describe("Identificador UUID do worker avaliado."),
+    workerId: z.string().uuid().describe("Identificador UUID do prestador avaliado."),
     score: z.number().int().min(1).max(5).describe("Nota inteira entre 1 e 5."),
     comment: z
       .string()
@@ -146,7 +146,7 @@ export const createRatingBodySchema = z
       .optional()
       .describe("Comentário opcional com detalhes da avaliação."),
   })
-  .describe("Payload para criar uma nova avaliação de worker.");
+  .describe("Payload para criar uma nova avaliação de prestador.");
 
 export const uploadMediaBodySchema = z
   .object({
@@ -159,7 +159,10 @@ export const userIdParamsSchema = z.object({
 });
 
 export const workerIdParamsSchema = z.object({
-  worker_id: z.string().min(1).describe("Identificador do worker cujas avaliações serão listadas."),
+  worker_id: z
+    .string()
+    .min(1)
+    .describe("Identificador do prestador cujas avaliações serão listadas."),
 });
 
 export const photoIdParamsSchema = z.object({
@@ -193,7 +196,7 @@ export const openApiDocumentation = {
     title: "API Conecta Bairro",
     version: "1.0.50",
     description:
-      "API RESTful para cadastro de usuários, publicação de serviços, avaliações e portfólio de workers. Todos os endpoints seguem o prefixo /api/v1 e usam JSON como formato padrão.",
+      "API RESTful para cadastro de usuários, publicação de serviços, avaliações e portfólio de prestadores. Todos os endpoints seguem o prefixo /api/v1 e usam JSON como formato padrão.",
   },
   tags: [
     {
@@ -210,15 +213,15 @@ export const openApiDocumentation = {
     },
     {
       name: "Services",
-      description: "Listagem pública e publicação de serviços por workers.",
+      description: "Listagem pública e publicação de serviços por prestadores.",
     },
     {
       name: "Ratings",
-      description: "Criação e consulta de avaliações de workers.",
+      description: "Criação e consulta de avaliações de prestadores.",
     },
     {
       name: "Media",
-      description: "Gerenciamento de fotos de portfólio dos workers.",
+      description: "Gerenciamento de fotos de portfólio dos prestadores.",
     },
   ],
   servers: [
