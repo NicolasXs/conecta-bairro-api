@@ -1,5 +1,6 @@
 import "dotenv/config";
 import { Elysia } from "elysia";
+import { cors } from "@elysiajs/cors";
 import { openapi } from "@elysiajs/openapi";
 import { z } from "zod";
 import { createApiPlugin } from "./app/api";
@@ -7,6 +8,7 @@ import { AppError } from "./domain/errors";
 import { openApiDocumentation } from "./app/openapi.schemas";
 
 const app = new Elysia()
+  .use(cors())
   .use(
     openapi({
       documentation: openApiDocumentation,
