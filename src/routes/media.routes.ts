@@ -17,7 +17,7 @@ export const mediaRoutes = (mediaController: MediaController) =>
       "/media/upload",
       async ({ headers, body, set }) => {
         const actor = await requireAuth(headers.authorization);
-        const photo = await mediaController.upload(actor.id, actor.role, body);
+        const photo = await mediaController.upload(actor.id, body);
         set.status = 201;
         return photo;
       },

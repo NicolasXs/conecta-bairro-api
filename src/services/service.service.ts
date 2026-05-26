@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { AppError } from "../domain/errors";
-import { Service, UserRole } from "../domain/entities";
+import { Service } from "../domain/entities";
 import { createId } from "../lib/id";
 import type { ServiceRepository } from "../repositories/service.repository";
 import type { UserRepository } from "../repositories/user.repository";
@@ -19,24 +19,20 @@ export class ServiceService {
     private readonly userRepository: UserRepository,
   ) {}
 
-  async create(workerId: string, role: UserRole, input: unknown): Promise<Service> {
-    if (role !== "worker") {
-      throw new AppError(403, "FORBIDDEN", "Apenas workers podem publicar serviços.");
-    }
+  async create(userId: string, input: unknown): Promise<Service> {
+    const user = await this.userRepository.findById(userId);
 
-    const worker = await this.userRepository.findById(workerId);
-
-    if (!worker) {
+    if (!user) {
       throw new AppError(404, "USER_NOT_FOUND", "Usuário não encontrado.");
     }
 
     const payload = createServiceSchema.parse(input) as CreateServiceInput;
     const service: Service = {
       id: createId(),
-      workerId,
-      workerName: worker.name,
+      workerId: userId,
+      workerName: user.name,
       category: payload.category,
-      neighborhood: payload.neighborhood,
+      bairro: payload.bairro,
       title: payload.title,
       description: payload.description,
       createdAt: new Date(),

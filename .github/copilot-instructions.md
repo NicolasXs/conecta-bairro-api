@@ -73,7 +73,7 @@ Siga **estritamente** a estrutura abaixo ao gerar código, rotas, controllers ou
 
 - `GET /api/v1/categories` → listar categorias
 - `GET /api/v1/services` → listar workers/serviços
-- `GET /api/v1/services?category=X&neighborhood=Y` → filtrar por categoria e bairro
+- `GET /api/v1/services?category=X&bairro=Y` → filtrar por categoria e bairro
 - `POST /api/v1/services` → worker adiciona serviço
 
 ### RATINGS

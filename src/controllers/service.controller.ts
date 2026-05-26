@@ -1,5 +1,4 @@
 import { ServiceService } from "../services/service.service";
-import { UserRole } from "../domain/entities";
 
 export class ServiceController {
   constructor(private readonly serviceService: ServiceService) {}
@@ -8,7 +7,7 @@ export class ServiceController {
     return this.serviceService.list(query as Record<string, string | undefined>);
   }
 
-  async create(actorId: string, actorRole: UserRole, body: unknown) {
-    return this.serviceService.create(actorId, actorRole, body);
+  async create(actorId: string, body: unknown) {
+    return this.serviceService.create(actorId, body);
   }
 }

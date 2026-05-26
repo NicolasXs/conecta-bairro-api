@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { AppError } from "../domain/errors";
-import { Rating, UserRole } from "../domain/entities";
+import { Rating } from "../domain/entities";
 import { createId } from "../lib/id";
 import type { RatingRepository } from "../repositories/rating.repository";
 import type { UserRepository } from "../repositories/user.repository";
@@ -16,16 +16,12 @@ export class RatingService {
     private readonly userRepository: UserRepository,
   ) {}
 
-  async create(clientId: string, role: UserRole, input: unknown): Promise<Rating> {
-    if (role !== "client") {
-      throw new AppError(403, "FORBIDDEN", "Apenas clientes podem avaliar serviços.");
-    }
-
+  async create(clientId: string, input: unknown): Promise<Rating> {
     const payload = createRatingSchema.parse(input) as CreateRatingInput;
     const worker = await this.userRepository.findById(payload.workerId);
 
-    if (!worker || worker.role !== "worker") {
-      throw new AppError(404, "WORKER_NOT_FOUND", "Worker não encontrado.");
+    if (!worker) {
+      throw new AppError(404, "WORKER_NOT_FOUND", "Usuário avaliado não encontrado.");
     }
 
     const rating: Rating = {

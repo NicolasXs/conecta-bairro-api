@@ -2,7 +2,6 @@ import { AppError } from "../domain/errors";
 
 interface JwtPayload {
   sub: string;
-  role: string;
   iat: number;
   exp: number;
 }
@@ -45,14 +44,13 @@ const createSignature = async (data: string, secret: string): Promise<string> =>
   return Buffer.from(new Uint8Array(signature)).toString("base64url");
 };
 
-export const signJwt = async (subject: string, role: string): Promise<string> => {
+export const signJwt = async (subject: string): Promise<string> => {
   const secret = getSecret();
   const now = Math.floor(Date.now() / 1000);
 
   const header = { alg: "HS256", typ: "JWT" };
   const payload: JwtPayload = {
     sub: subject,
-    role,
     iat: now,
     exp: now + 60 * 60 * 24,
   };

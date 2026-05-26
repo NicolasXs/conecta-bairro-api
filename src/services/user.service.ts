@@ -3,6 +3,7 @@ import { AppError } from "../domain/errors";
 import { User } from "../domain/entities";
 import type { UserRepository } from "../repositories/user.repository";
 import { updateUserBodySchema } from "../app/openapi.schemas";
+import { fetchCidadeByCep } from "../lib/viacep";
 
 const updateUserSchema = updateUserBodySchema;
 
@@ -41,10 +42,19 @@ export class UserService {
       ? await Bun.password.hash(payload.password)
       : user.passwordHash;
 
+    let cidade = user.cidade;
+    const nextCep = payload.cep !== undefined ? payload.cep : user.cep;
+
+    if (payload.cep !== undefined) {
+      cidade = await fetchCidadeByCep(payload.cep);
+    }
+
     const updatedUser: User = {
       ...user,
       name: payload.name ?? user.name,
-      neighborhood: payload.neighborhood ?? user.neighborhood,
+      bairro: payload.bairro ?? user.bairro,
+      cep: nextCep,
+      cidade,
       passwordHash: nextPasswordHash,
       updatedAt: new Date(),
     };

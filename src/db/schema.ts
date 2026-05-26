@@ -1,13 +1,12 @@
-import { pgTable, text, integer, timestamp, pgEnum } from "drizzle-orm/pg-core";
-
-export const userRoleEnum = pgEnum("user_role", ["worker", "client"]);
+import { pgTable, text, integer, timestamp } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
-  role: userRoleEnum("role").notNull(),
-  neighborhood: text("neighborhood"),
+  bairro: text("bairro"),
+  cep: text("cep"),
+  cidade: text("cidade"),
   passwordHash: text("password_hash").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
@@ -24,7 +23,7 @@ export const services = pgTable("services", {
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   category: text("category").notNull(),
-  neighborhood: text("neighborhood").notNull(),
+  bairro: text("bairro").notNull(),
   title: text("title").notNull(),
   description: text("description").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),

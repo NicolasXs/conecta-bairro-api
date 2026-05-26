@@ -2,7 +2,7 @@ import { Service } from "../domain/entities";
 
 export interface ServiceFilters {
   category?: string;
-  neighborhood?: string;
+  bairro?: string;
 }
 
 export interface ServiceRepository {
@@ -25,11 +25,11 @@ export class InMemoryServiceRepository implements ServiceRepository {
       const matchesCategory = filters?.category
         ? service.category.toLowerCase() === filters.category.toLowerCase()
         : true;
-      const matchesNeighborhood = filters?.neighborhood
-        ? service.neighborhood.toLowerCase() === filters.neighborhood.toLowerCase()
+      const matchesbairro = filters?.bairro
+        ? service.bairro.toLowerCase() === filters.bairro.toLowerCase()
         : true;
 
-      return matchesCategory && matchesNeighborhood;
+      return matchesCategory && matchesbairro;
     });
   }
 }

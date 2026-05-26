@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { AppError } from "../domain/errors";
-import { MediaPhoto, UserRole } from "../domain/entities";
+import { MediaPhoto } from "../domain/entities";
 import { createId } from "../lib/id";
 import type { MediaRepository } from "../repositories/media.repository";
 import { uploadMediaBodySchema } from "../app/openapi.schemas";
@@ -12,15 +12,11 @@ type UploadMediaInput = z.infer<typeof uploadMediaSchema>;
 export class MediaService {
   constructor(private readonly mediaRepository: MediaRepository) {}
 
-  async upload(workerId: string, role: UserRole, input: unknown): Promise<MediaPhoto> {
-    if (role !== "worker") {
-      throw new AppError(403, "FORBIDDEN", "Apenas workers podem enviar fotos de portfólio.");
-    }
-
+  async upload(userId: string, input: unknown): Promise<MediaPhoto> {
     const payload = uploadMediaSchema.parse(input) as UploadMediaInput;
     const photo: MediaPhoto = {
       id: createId(),
-      workerId,
+      workerId: userId,
       url: payload.url,
       createdAt: new Date(),
     };

@@ -30,7 +30,7 @@ export const serviceRoutes = (serviceController: ServiceController) =>
       "/services",
       async ({ headers, body, set }) => {
         const actor = await requireAuth(headers.authorization);
-        const service = await serviceController.create(actor.id, actor.role, body);
+        const service = await serviceController.create(actor.id, body);
         set.status = 201;
         return service;
       },

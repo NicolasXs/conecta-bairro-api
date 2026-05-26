@@ -1,10 +1,11 @@
 import { z } from "zod";
 import { AppError } from "../domain/errors";
-import { User, UserRole } from "../domain/entities";
+import { User } from "../domain/entities";
 import { createId } from "../lib/id";
 import { signJwt } from "../lib/jwt";
 import type { UserRepository } from "../repositories/user.repository";
 import { loginBodySchema, registerBodySchema } from "../app/openapi.schemas";
+import { fetchCidadeByCep } from "../lib/viacep";
 
 const registerSchema = registerBodySchema.extend({
   email: z.email().transform((value) => value.trim().toLowerCase()),
@@ -28,20 +29,26 @@ export class AuthService {
       throw new AppError(409, "EMAIL_ALREADY_IN_USE", "Já existe um usuário com este e-mail.");
     }
 
+    let cidade: string | undefined;
+    if (payload.cep) {
+      cidade = await fetchCidadeByCep(payload.cep);
+    }
+
     const now = new Date();
     const passwordHash = await Bun.password.hash(payload.password);
     const user: User = {
       id: createId(),
       name: payload.name,
       email: payload.email,
-      role: payload.role as UserRole,
-      neighborhood: payload.neighborhood,
+      bairro: payload.bairro,
+      cep: payload.cep,
+      cidade,
       passwordHash,
       createdAt: now,
       updatedAt: now,
     };
 
-    const token = await signJwt(user.id, user.role);
+    const token = await signJwt(user.id);
     const createdUser = await this.userRepository.create(user);
 
     return {
@@ -64,7 +71,7 @@ export class AuthService {
       throw new AppError(401, "INVALID_CREDENTIALS", "Credenciais inválidas.");
     }
 
-    const token = await signJwt(user.id, user.role);
+    const token = await signJwt(user.id);
 
     return {
       token,
@@ -80,5 +87,4 @@ export class AuthService {
 
 export type AuthenticatedUser = {
   id: string;
-  role: UserRole;
 };

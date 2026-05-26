@@ -44,7 +44,7 @@ export const auth = betterAuth({
         required: true,
         input: true,
       },
-      neighborhood: {
+      bairro: {
         type: "string",
         required: false,
         input: true,

@@ -24,7 +24,7 @@ CREATE TABLE "services" (
 	"id" text PRIMARY KEY NOT NULL,
 	"worker_id" text NOT NULL,
 	"category" text NOT NULL,
-	"neighborhood" text NOT NULL,
+	"bairro" text NOT NULL,
 	"title" text NOT NULL,
 	"description" text NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL
@@ -35,7 +35,7 @@ CREATE TABLE "users" (
 	"name" text NOT NULL,
 	"email" text NOT NULL,
 	"role" "user_role" NOT NULL,
-	"neighborhood" text,
+	"bairro" text,
 	"password_hash" text NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,

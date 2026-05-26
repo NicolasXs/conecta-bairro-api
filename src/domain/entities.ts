@@ -1,11 +1,10 @@
-export type UserRole = "worker" | "client";
-
 export interface User {
   id: string;
   name: string;
   email: string;
-  role: UserRole;
-  neighborhood?: string;
+  bairro?: string;
+  cep?: string;
+  cidade?: string;
   passwordHash: string;
   createdAt: Date;
   updatedAt: Date;
@@ -21,7 +20,7 @@ export interface Service {
   workerId: string;
   workerName: string;
   category: string;
-  neighborhood: string;
+  bairro: string;
   title: string;
   description: string;
   createdAt: Date;

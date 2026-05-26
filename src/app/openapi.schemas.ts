@@ -1,21 +1,21 @@
 import { z } from "zod";
 
-export const userRoleSchema = z
-  .enum(["worker", "client"])
-  .describe("Perfil do usuário na plataforma.");
-
 export const safeUserSchema = z
   .object({
     id: z.string().describe("Identificador único do usuário."),
     name: z.string().min(2).max(100).describe("Nome exibido no perfil."),
     email: z.email().describe("E-mail usado para autenticação e contato."),
-    role: userRoleSchema,
-    neighborhood: z
+    bairro: z
       .string()
       .min(2)
       .max(120)
       .optional()
       .describe("Bairro principal de atuação ou residência do usuário."),
+    cep: z.string().optional().describe("CEP do usuário."),
+    cidade: z
+      .string()
+      .optional()
+      .describe("Cidade do usuário, preenchida automaticamente via ViaCEP."),
     createdAt: z.date().describe("Data de criação do usuário."),
     updatedAt: z.date().describe("Data da última atualização do usuário."),
   })
@@ -38,7 +38,7 @@ export const serviceSchema = z
       .max(100)
       .describe("Nome do trabalhador responsável pelo serviço."),
     category: z.string().min(2).max(80).describe("Categoria principal do serviço."),
-    neighborhood: z.string().min(2).max(120).describe("Bairro atendido pelo prestador."),
+    bairro: z.string().min(2).max(120).describe("Bairro atendido pelo prestador."),
     title: z.string().min(2).max(120).describe("Título curto usado na listagem."),
     description: z.string().min(2).max(500).describe("Descrição detalhada do serviço oferecido."),
     createdAt: z.date().describe("Data de publicação do serviço."),
@@ -74,13 +74,18 @@ export const registerBodySchema = z
     name: z.string().min(2).max(100).describe("Nome completo ou nome profissional do usuário."),
     email: z.email().describe("E-mail único para cadastro e login."),
     password: z.string().min(6).max(128).describe("Senha com no mínimo 6 caracteres."),
-    role: userRoleSchema.describe("Tipo de conta que será criada."),
-    neighborhood: z
+    bairro: z
       .string()
       .min(2)
       .max(120)
       .optional()
       .describe("Bairro principal do usuário, útil para busca e perfil."),
+    cep: z
+      .string()
+      .optional()
+      .describe(
+        "CEP do usuário. Quando informado, a cidade é preenchida automaticamente via ViaCEP.",
+      ),
   })
   .describe("Payload necessário para registrar um novo usuário.");
 
@@ -101,12 +106,11 @@ export const authResponseSchema = z
 export const updateUserBodySchema = z
   .object({
     name: z.string().min(2).max(100).optional().describe("Novo nome do usuário."),
-    neighborhood: z
+    bairro: z.string().min(2).max(120).optional().describe("Novo bairro associado ao perfil."),
+    cep: z
       .string()
-      .min(2)
-      .max(120)
       .optional()
-      .describe("Novo bairro associado ao perfil."),
+      .describe("Novo CEP. A cidade será atualizada automaticamente via ViaCEP."),
     password: z
       .string()
       .min(6)
@@ -119,7 +123,7 @@ export const updateUserBodySchema = z
 export const serviceCreateBodySchema = z
   .object({
     category: z.string().min(2).max(80).describe("Categoria em que o serviço será listado."),
-    neighborhood: z.string().min(2).max(120).describe("Bairro principal atendido pelo serviço."),
+    bairro: z.string().min(2).max(120).describe("Bairro principal atendido pelo serviço."),
     title: z.string().min(2).max(120).describe("Título de destaque do anúncio."),
     description: z
       .string()
@@ -132,7 +136,7 @@ export const serviceCreateBodySchema = z
 export const serviceListQuerySchema = z
   .object({
     category: z.string().min(2).max(80).optional().describe("Filtra por categoria de serviço."),
-    neighborhood: z.string().min(2).max(120).optional().describe("Filtra por bairro atendido."),
+    bairro: z.string().min(2).max(120).optional().describe("Filtra por bairro atendido."),
   })
   .describe("Filtros opcionais usados para refinar a listagem de serviços.");
 

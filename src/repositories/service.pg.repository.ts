@@ -14,7 +14,7 @@ export class PostgresServiceRepository implements ServiceRepository {
         id: service.id,
         workerId: service.workerId,
         category: service.category,
-        neighborhood: service.neighborhood,
+        bairro: service.bairro,
         title: service.title,
         description: service.description,
         createdAt: service.createdAt,
@@ -34,8 +34,8 @@ export class PostgresServiceRepository implements ServiceRepository {
       conditions.push(sql`lower(${services.category}) = lower(${filters.category})`);
     }
 
-    if (filters?.neighborhood) {
-      conditions.push(sql`lower(${services.neighborhood}) = lower(${filters.neighborhood})`);
+    if (filters?.bairro) {
+      conditions.push(sql`lower(${services.bairro}) = lower(${filters.bairro})`);
     }
 
     const rows =
@@ -67,7 +67,7 @@ export class PostgresServiceRepository implements ServiceRepository {
       id: row.id,
       workerId: row.workerId,
       category: row.category,
-      neighborhood: row.neighborhood,
+      bairro: row.bairro,
       title: row.title,
       description: row.description,
       createdAt: row.createdAt,

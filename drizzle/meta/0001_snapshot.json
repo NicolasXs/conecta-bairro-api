@@ -1,6 +1,6 @@
 {
-  "id": "e348f5ed-9d87-4a18-938b-89faa9d56f0f",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "9ed12621-fabb-40dc-9e92-9faf79e49581",
+  "prevId": "e348f5ed-9d87-4a18-938b-89faa9d56f0f",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -234,15 +234,20 @@
           "primaryKey": false,
           "notNull": true
         },
-        "role": {
-          "name": "role",
-          "type": "user_role",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
         "bairro": {
           "name": "bairro",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cep": {
+          "name": "cep",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cidade": {
+          "name": "cidade",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -283,13 +288,7 @@
       "isRLSEnabled": false
     }
   },
-  "enums": {
-    "public.user_role": {
-      "name": "user_role",
-      "schema": "public",
-      "values": ["worker", "client"]
-    }
-  },
+  "enums": {},
   "schemas": {},
   "sequences": {},
   "roles": {},

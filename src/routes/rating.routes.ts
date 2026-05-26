@@ -16,7 +16,7 @@ export const ratingRoutes = (ratingController: RatingController) =>
       "/ratings",
       async ({ headers, body, set }) => {
         const actor = await requireAuth(headers.authorization);
-        const rating = await ratingController.create(actor.id, actor.role, body);
+        const rating = await ratingController.create(actor.id, body);
         set.status = 201;
         return rating;
       },
