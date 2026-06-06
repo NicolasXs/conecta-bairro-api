@@ -1,4 +1,4 @@
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, ilike, sql } from "drizzle-orm";
 import { Database } from "../db";
 import { services, users } from "../db/schema";
 import { Service } from "../domain/entities";
@@ -38,23 +38,29 @@ export class PostgresServiceRepository implements ServiceRepository {
       conditions.push(sql`lower(${services.bairro}) = lower(${filters.bairro})`);
     }
 
-    const rows =
-      conditions.length > 0
-        ? await this.db
-            .select({
-              service: services,
-              workerName: users.name,
-            })
-            .from(services)
-            .innerJoin(users, eq(services.workerId, users.id))
-            .where(and(...conditions))
-        : await this.db
-            .select({
-              service: services,
-              workerName: users.name,
-            })
-            .from(services)
-            .innerJoin(users, eq(services.workerId, users.id));
+    if (filters?.cidade) {
+      conditions.push(sql`lower(${users.cidade}) = lower(${filters.cidade})`);
+    }
+
+    if (filters?.cep) {
+      conditions.push(eq(users.cep, filters.cep));
+    }
+
+    if (filters?.q) {
+      const term = `%${filters.q}%`;
+      conditions.push(
+        sql`(${ilike(services.title, term)} OR ${ilike(services.description, term)})`,
+      );
+    }
+
+    const rows = await this.db
+      .select({
+        service: services,
+        workerName: users.name,
+      })
+      .from(services)
+      .innerJoin(users, eq(services.workerId, users.id))
+      .where(conditions.length > 0 ? and(...conditions) : undefined);
 
     return rows.map((row) => ({
       ...this.toBaseEntity(row.service),

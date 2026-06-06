@@ -5,7 +5,6 @@ import { createId } from "../lib/id";
 import { signJwt } from "../lib/jwt";
 import type { UserRepository } from "../repositories/user.repository";
 import { loginBodySchema, registerBodySchema } from "../app/openapi.schemas";
-import { fetchCidadeByCep } from "../lib/viacep";
 
 const registerSchema = registerBodySchema.extend({
   email: z.email().transform((value) => value.trim().toLowerCase()),
@@ -29,11 +28,6 @@ export class AuthService {
       throw new AppError(409, "EMAIL_ALREADY_IN_USE", "Já existe um usuário com este e-mail.");
     }
 
-    let cidade: string | undefined;
-    if (payload.cep) {
-      cidade = await fetchCidadeByCep(payload.cep);
-    }
-
     const now = new Date();
     const passwordHash = await Bun.password.hash(payload.password);
     const user: User = {
@@ -42,7 +36,7 @@ export class AuthService {
       email: payload.email,
       bairro: payload.bairro,
       cep: payload.cep,
-      cidade,
+      cidade: payload.cidade,
       passwordHash,
       createdAt: now,
       updatedAt: now,

@@ -48,6 +48,6 @@ export default app;
 
 // Desenvolvimento local: escuta quando executado diretamente
 if (import.meta.main) {
-  app.listen(3000);
+  app.listen(3001);
   console.log(`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`);
 }

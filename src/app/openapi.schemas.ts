@@ -12,10 +12,7 @@ export const safeUserSchema = z
       .optional()
       .describe("Bairro principal de atuação ou residência do usuário."),
     cep: z.string().optional().describe("CEP do usuário."),
-    cidade: z
-      .string()
-      .optional()
-      .describe("Cidade do usuário, preenchida automaticamente via ViaCEP."),
+    cidade: z.string().optional().describe("Cidade do usuário."),
     createdAt: z.date().describe("Data de criação do usuário."),
     updatedAt: z.date().describe("Data da última atualização do usuário."),
   })
@@ -74,18 +71,9 @@ export const registerBodySchema = z
     name: z.string().min(2).max(100).describe("Nome completo ou nome profissional do usuário."),
     email: z.email().describe("E-mail único para cadastro e login."),
     password: z.string().min(6).max(128).describe("Senha com no mínimo 6 caracteres."),
-    bairro: z
-      .string()
-      .min(2)
-      .max(120)
-      .optional()
-      .describe("Bairro principal do usuário, útil para busca e perfil."),
-    cep: z
-      .string()
-      .optional()
-      .describe(
-        "CEP do usuário. Quando informado, a cidade é preenchida automaticamente via ViaCEP.",
-      ),
+    bairro: z.string().min(2).max(120).optional().describe("Bairro do usuário."),
+    cep: z.string().optional().describe("CEP do usuário."),
+    cidade: z.string().optional().describe("Cidade do usuário."),
   })
   .describe("Payload necessário para registrar um novo usuário.");
 
@@ -107,10 +95,8 @@ export const updateUserBodySchema = z
   .object({
     name: z.string().min(2).max(100).optional().describe("Novo nome do usuário."),
     bairro: z.string().min(2).max(120).optional().describe("Novo bairro associado ao perfil."),
-    cep: z
-      .string()
-      .optional()
-      .describe("Novo CEP. A cidade será atualizada automaticamente via ViaCEP."),
+    cep: z.string().optional().describe("Novo CEP do usuário."),
+    cidade: z.string().optional().describe("Nova cidade do usuário."),
     password: z
       .string()
       .min(6)
@@ -136,7 +122,15 @@ export const serviceCreateBodySchema = z
 export const serviceListQuerySchema = z
   .object({
     category: z.string().min(2).max(80).optional().describe("Filtra por categoria de serviço."),
-    bairro: z.string().min(2).max(120).optional().describe("Filtra por bairro atendido."),
+    bairro: z.string().min(2).max(120).optional().describe("Filtra por bairro."),
+    cidade: z.string().min(2).max(120).optional().describe("Filtra pela cidade do prestador."),
+    cep: z.string().optional().describe("Filtra pelo CEP do prestador."),
+    q: z
+      .string()
+      .min(1)
+      .max(200)
+      .optional()
+      .describe("Busca por texto no título ou descrição do serviço."),
   })
   .describe("Filtros opcionais usados para refinar a listagem de serviços.");
 

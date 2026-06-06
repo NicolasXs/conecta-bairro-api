@@ -3,6 +3,9 @@ import { Service } from "../domain/entities";
 export interface ServiceFilters {
   category?: string;
   bairro?: string;
+  cidade?: string;
+  cep?: string;
+  q?: string;
 }
 
 export interface ServiceRepository {
@@ -25,11 +28,11 @@ export class InMemoryServiceRepository implements ServiceRepository {
       const matchesCategory = filters?.category
         ? service.category.toLowerCase() === filters.category.toLowerCase()
         : true;
-      const matchesbairro = filters?.bairro
+      const matchesBairro = filters?.bairro
         ? service.bairro.toLowerCase() === filters.bairro.toLowerCase()
         : true;
 
-      return matchesCategory && matchesbairro;
+      return matchesCategory && matchesBairro;
     });
   }
 }
