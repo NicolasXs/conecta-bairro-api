@@ -1,4 +1,4 @@
-import { pgTable, text, integer, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, integer, timestamp, jsonb } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
   id: text("id").primaryKey(),
@@ -7,6 +7,8 @@ export const users = pgTable("users", {
   bairro: text("bairro"),
   cep: text("cep"),
   cidade: text("cidade"),
+  description: text("description"),
+  contactLinks: jsonb("contact_links").$type<Array<{ label: string; value: string }>>(),
   passwordHash: text("password_hash").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),

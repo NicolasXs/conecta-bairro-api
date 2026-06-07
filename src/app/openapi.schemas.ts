@@ -13,6 +13,16 @@ export const safeUserSchema = z
       .describe("Bairro principal de atuação ou residência do usuário."),
     cep: z.string().optional().describe("CEP do usuário."),
     cidade: z.string().optional().describe("Cidade do usuário."),
+    description: z.string().max(600).optional().describe("Descrição/bio do perfil do usuário."),
+    contactLinks: z
+      .array(
+        z.object({
+          label: z.string().min(1).max(50).describe("Nome da rede ou canal (ex: WhatsApp, X, Bluesky)."),
+          value: z.string().min(1).max(300).describe("URL, handle ou número de contato."),
+        }),
+      )
+      .optional()
+      .describe("Lista de links de contato do usuário."),
     createdAt: z.date().describe("Data de criação do usuário."),
     updatedAt: z.date().describe("Data da última atualização do usuário."),
   })
@@ -97,6 +107,17 @@ export const updateUserBodySchema = z
     bairro: z.string().min(2).max(120).optional().describe("Novo bairro associado ao perfil."),
     cep: z.string().optional().describe("Novo CEP do usuário."),
     cidade: z.string().optional().describe("Nova cidade do usuário."),
+    description: z.string().max(600).optional().describe("Descrição/bio do perfil."),
+    contactLinks: z
+      .array(
+        z.object({
+          label: z.string().min(1).max(50),
+          value: z.string().min(1).max(300),
+        }),
+      )
+      .max(10)
+      .optional()
+      .describe("Lista de links de contato. Substitui completamente a lista existente quando enviada."),
     password: z
       .string()
       .min(6)

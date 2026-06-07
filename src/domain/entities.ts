@@ -5,6 +5,8 @@ export interface User {
   bairro?: string;
   cep?: string;
   cidade?: string;
+  description?: string;
+  contactLinks?: Array<{ label: string; value: string }>;
   passwordHash: string;
   createdAt: Date;
   updatedAt: Date;

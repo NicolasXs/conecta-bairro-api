@@ -47,6 +47,8 @@ export class UserService {
       bairro: payload.bairro ?? user.bairro,
       cep: payload.cep ?? user.cep,
       cidade: payload.cidade ?? user.cidade,
+      description: payload.description ?? user.description,
+      contactLinks: payload.contactLinks ?? user.contactLinks,
       passwordHash: nextPasswordHash,
       updatedAt: new Date(),
     };
