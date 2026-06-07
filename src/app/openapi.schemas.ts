@@ -175,6 +175,8 @@ export const serviceListQuerySchema = z
       .max(200)
       .optional()
       .describe("Busca por texto no título ou descrição do serviço."),
+    minPrice: z.coerce.number().positive().optional().describe("Preço mínimo do serviço."),
+    maxPrice: z.coerce.number().positive().optional().describe("Preço máximo do serviço."),
   })
   .describe("Filtros opcionais usados para refinar a listagem de serviços.");
 

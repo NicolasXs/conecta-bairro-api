@@ -54,6 +54,14 @@ export class PostgresServiceRepository implements ServiceRepository {
       );
     }
 
+    if (filters?.minPrice !== undefined) {
+      conditions.push(sql`${services.price} IS NOT NULL AND ${services.price}::numeric >= ${filters.minPrice}`);
+    }
+
+    if (filters?.maxPrice !== undefined) {
+      conditions.push(sql`${services.price} IS NOT NULL AND ${services.price}::numeric <= ${filters.maxPrice}`);
+    }
+
     const rows = await this.db
       .select({
         service: services,

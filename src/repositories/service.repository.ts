@@ -6,6 +6,8 @@ export interface ServiceFilters {
   cidade?: string;
   cep?: string;
   q?: string;
+  minPrice?: number;
+  maxPrice?: number;
 }
 
 export interface ServiceRepository {
@@ -35,8 +37,16 @@ export class InMemoryServiceRepository implements ServiceRepository {
       const matchesBairro = filters?.bairro
         ? service.bairro.toLowerCase() === filters.bairro.toLowerCase()
         : true;
+      const matchesMinPrice =
+        filters?.minPrice !== undefined
+          ? service.price !== undefined && service.price >= filters.minPrice
+          : true;
+      const matchesMaxPrice =
+        filters?.maxPrice !== undefined
+          ? service.price !== undefined && service.price <= filters.maxPrice
+          : true;
 
-      return matchesCategory && matchesBairro;
+      return matchesCategory && matchesBairro && matchesMinPrice && matchesMaxPrice;
     });
   }
 
