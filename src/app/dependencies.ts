@@ -1,17 +1,20 @@
 import { AuthController } from "../controllers/auth.controller";
 import { CategoryController } from "../controllers/category.controller";
+import { HomeController } from "../controllers/home.controller";
 import { MediaController } from "../controllers/media.controller";
 import { RatingController } from "../controllers/rating.controller";
 import { ServiceController } from "../controllers/service.controller";
 import { UserController } from "../controllers/user.controller";
 import { db } from "../db";
 import { PostgresCategoryRepository } from "../repositories/category.pg.repository";
+import { PostgresHomeRepository } from "../repositories/home.pg.repository";
 import { PostgresMediaRepository } from "../repositories/media.pg.repository";
 import { PostgresRatingRepository } from "../repositories/rating.pg.repository";
 import { PostgresServiceRepository } from "../repositories/service.pg.repository";
 import { PostgresUserRepository } from "../repositories/user.pg.repository";
 import { AuthService } from "../services/auth.service";
 import { CategoryService } from "../services/category.service";
+import { HomeService } from "../services/home.service";
 import { MediaService } from "../services/media.service";
 import { RatingService } from "../services/rating.service";
 import { ServiceService } from "../services/service.service";
@@ -23,6 +26,7 @@ export const createDependencies = () => {
   const serviceRepository = new PostgresServiceRepository(db);
   const ratingRepository = new PostgresRatingRepository(db);
   const mediaRepository = new PostgresMediaRepository(db);
+  const homeRepository = new PostgresHomeRepository(db);
 
   const authService = new AuthService(userRepository);
   const userService = new UserService(userRepository);
@@ -30,6 +34,7 @@ export const createDependencies = () => {
   const serviceService = new ServiceService(serviceRepository, userRepository);
   const ratingService = new RatingService(ratingRepository, userRepository);
   const mediaService = new MediaService(mediaRepository);
+  const homeService = new HomeService(homeRepository);
 
   return {
     authController: new AuthController(authService),
@@ -38,5 +43,6 @@ export const createDependencies = () => {
     serviceController: new ServiceController(serviceService),
     ratingController: new RatingController(ratingService),
     mediaController: new MediaController(mediaService),
+    homeController: new HomeController(homeService),
   };
 };

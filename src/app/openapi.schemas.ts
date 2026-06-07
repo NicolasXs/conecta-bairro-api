@@ -152,6 +152,42 @@ export const uploadMediaBodySchema = z
   })
   .describe("Payload usado para registrar uma foto de portfólio.");
 
+export const popularServiceSchema = serviceSchema
+  .extend({
+    avgScore: z.number().describe("Média das avaliações do prestador (0 se sem avaliações)."),
+    ratingCount: z.number().int().describe("Total de avaliações recebidas pelo prestador."),
+  })
+  .describe("Serviço popular com métricas de avaliação do prestador.");
+
+export const professionalSchema = safeUserSchema
+  .extend({
+    avgScore: z
+      .number()
+      .nullable()
+      .describe("Média das avaliações recebidas. Null se ainda não avaliado."),
+    ratingCount: z.number().int().describe("Total de avaliações recebidas."),
+    serviceCount: z.number().int().describe("Total de serviços publicados."),
+  })
+  .describe("Prestador de serviços com estatísticas de avaliação e publicações.");
+
+export const homeQuerySchema = z.object({
+  limit: z
+    .string()
+    .optional()
+    .transform((v) => (v ? Math.min(Math.max(parseInt(v, 10) || 10, 1), 50) : 10))
+    .describe("Quantidade máxima de resultados (padrão 10, máximo 50)."),
+});
+
+export const recommendationsQuerySchema = z.object({
+  bairro: z.string().min(2).max(120).optional().describe("Filtra por bairro."),
+  cidade: z.string().min(2).max(120).optional().describe("Filtra pela cidade do prestador."),
+  limit: z
+    .string()
+    .optional()
+    .transform((v) => (v ? Math.min(Math.max(parseInt(v, 10) || 10, 1), 50) : 10))
+    .describe("Quantidade máxima de resultados (padrão 10, máximo 50)."),
+});
+
 export const serviceUpdateBodySchema = z
   .object({
     category: z.string().min(2).max(80).optional().describe("Nova categoria do serviço."),
@@ -216,6 +252,10 @@ export const openApiDocumentation = {
       "API RESTful para cadastro de usuários, publicação de serviços, avaliações e portfólio de prestadores. Todos os endpoints seguem o prefixo /api/v1 e usam JSON como formato padrão.",
   },
   tags: [
+    {
+      name: "Home",
+      description: "Dados agregados para a tela inicial: populares, recomendações e profissionais.",
+    },
     {
       name: "Auth",
       description: "Cadastro e autenticação de usuários com retorno de JWT.",
