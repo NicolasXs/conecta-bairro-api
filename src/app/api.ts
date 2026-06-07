@@ -12,7 +12,7 @@ export const createApiPlugin = () => {
 
   return new Elysia({ prefix: "/api/v1" })
     .use(authRoutes(dependencies.authController))
-    .use(userRoutes(dependencies.userController))
+    .use(userRoutes(dependencies.userController, dependencies.serviceController))
     .use(categoryRoutes(dependencies.categoryController))
     .use(serviceRoutes(dependencies.serviceController))
     .use(ratingRoutes(dependencies.ratingController))

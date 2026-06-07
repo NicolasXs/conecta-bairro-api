@@ -152,6 +152,25 @@ export const uploadMediaBodySchema = z
   })
   .describe("Payload usado para registrar uma foto de portfólio.");
 
+export const serviceUpdateBodySchema = z
+  .object({
+    category: z.string().min(2).max(80).optional().describe("Nova categoria do serviço."),
+    bairro: z.string().min(2).max(120).optional().describe("Novo bairro atendido."),
+    title: z.string().min(2).max(120).optional().describe("Novo título do anúncio."),
+    description: z.string().min(2).max(500).optional().describe("Nova descrição do serviço."),
+  })
+  .describe("Campos permitidos para atualizar um serviço publicado.");
+
+export const serviceIdParamsSchema = z.object({
+  id: z.string().min(1).describe("Identificador do serviço."),
+});
+
+export const deleteServiceResponseSchema = z
+  .object({
+    success: z.literal(true).describe("Indica que o serviço foi removido com sucesso."),
+  })
+  .describe("Resposta padrão para remoção bem-sucedida de um serviço.");
+
 export const userIdParamsSchema = z.object({
   id: z.string().min(1).describe("Identificador do usuário."),
 });

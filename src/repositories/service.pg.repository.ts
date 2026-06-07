@@ -68,6 +68,47 @@ export class PostgresServiceRepository implements ServiceRepository {
     }));
   }
 
+  async findById(id: string): Promise<Service | null> {
+    const rows = await this.db
+      .select({ service: services, workerName: users.name })
+      .from(services)
+      .innerJoin(users, eq(services.workerId, users.id))
+      .where(eq(services.id, id))
+      .limit(1);
+
+    if (rows.length === 0) return null;
+    return { ...this.toBaseEntity(rows[0].service), workerName: rows[0].workerName };
+  }
+
+  async findByWorkerId(workerId: string): Promise<Service[]> {
+    const rows = await this.db
+      .select({ service: services, workerName: users.name })
+      .from(services)
+      .innerJoin(users, eq(services.workerId, users.id))
+      .where(eq(services.workerId, workerId));
+
+    return rows.map((row) => ({ ...this.toBaseEntity(row.service), workerName: row.workerName }));
+  }
+
+  async update(service: Service): Promise<Service> {
+    const [row] = await this.db
+      .update(services)
+      .set({
+        category: service.category,
+        bairro: service.bairro,
+        title: service.title,
+        description: service.description,
+      })
+      .where(eq(services.id, service.id))
+      .returning();
+
+    return { ...this.toBaseEntity(row), workerName: service.workerName };
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.db.delete(services).where(eq(services.id, id));
+  }
+
   private toBaseEntity(row: typeof services.$inferSelect): Omit<Service, "workerName"> {
     return {
       id: row.id,

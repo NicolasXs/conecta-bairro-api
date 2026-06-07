@@ -2,11 +2,14 @@ import { Elysia } from "elysia";
 import { ServiceController } from "../controllers/service.controller";
 import { requireAuth } from "../lib/auth";
 import {
+  deleteServiceResponseSchema,
   errorResponseSchema,
   protectedRouteDetail,
   serviceCreateBodySchema,
+  serviceIdParamsSchema,
   serviceListQuerySchema,
   serviceSchema,
+  serviceUpdateBodySchema,
   validationErrorResponseSchema,
 } from "../app/openapi.schemas";
 
@@ -50,6 +53,55 @@ export const serviceRoutes = (serviceController: ServiceController) =>
           summary: "Publicar serviço",
           description:
             "Permite que um usuário autenticado com papel worker publique um novo serviço na plataforma.",
+        },
+      },
+    )
+    .put(
+      "/services/:id",
+      async ({ params, headers, body }) => {
+        const actor = await requireAuth(headers.authorization);
+        return serviceController.update(params.id, body, actor.id);
+      },
+      {
+        params: serviceIdParamsSchema,
+        body: serviceUpdateBodySchema,
+        response: {
+          200: serviceSchema,
+          400: validationErrorResponseSchema,
+          401: errorResponseSchema,
+          403: errorResponseSchema,
+          404: errorResponseSchema,
+        },
+        detail: {
+          ...protectedRouteDetail,
+          tags: ["Services"],
+          operationId: "updateService",
+          summary: "Atualizar serviço",
+          description:
+            "Atualiza os dados de um serviço publicado pelo próprio usuário autenticado.",
+        },
+      },
+    )
+    .delete(
+      "/services/:id",
+      async ({ params, headers }) => {
+        const actor = await requireAuth(headers.authorization);
+        return serviceController.delete(params.id, actor.id);
+      },
+      {
+        params: serviceIdParamsSchema,
+        response: {
+          200: deleteServiceResponseSchema,
+          401: errorResponseSchema,
+          403: errorResponseSchema,
+          404: errorResponseSchema,
+        },
+        detail: {
+          ...protectedRouteDetail,
+          tags: ["Services"],
+          operationId: "deleteService",
+          summary: "Apagar serviço",
+          description: "Remove permanentemente um serviço publicado pelo próprio usuário autenticado.",
         },
       },
     );

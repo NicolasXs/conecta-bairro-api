@@ -1,4 +1,5 @@
 import "dotenv/config";
+import { inArray, or } from "drizzle-orm";
 import { db } from "../db";
 import { users, categories, services, ratings, mediaPhotos } from "../db/schema";
 
@@ -8,19 +9,20 @@ const now = new Date();
 
 // ─── Users ────────────────────────────────────────────────────────────────────
 
-const worker1Id = createId();
-const worker2Id = createId();
-const worker3Id = createId();
-const client1Id = createId();
-const client2Id = createId();
+const worker1Id = "seed-user-worker-1";
+const worker2Id = "seed-user-worker-2";
+const worker3Id = "seed-user-worker-3";
+const client1Id = "seed-user-client-1";
+const client2Id = "seed-user-client-2";
 
 const seedUsers = [
   {
     id: worker1Id,
     name: "Carlos Eletricista",
     email: "carlos@example.com",
-    role: "worker" as const,
     bairro: "Centro",
+    cep: "01310100",
+    cidade: "São Paulo",
     passwordHash: await Bun.password.hash("senha123"),
     createdAt: now,
     updatedAt: now,
@@ -29,8 +31,9 @@ const seedUsers = [
     id: worker2Id,
     name: "Ana Pintora",
     email: "ana@example.com",
-    role: "worker" as const,
     bairro: "Jardim América",
+    cep: "01310100",
+    cidade: "São Paulo",
     passwordHash: await Bun.password.hash("senha123"),
     createdAt: now,
     updatedAt: now,
@@ -39,8 +42,9 @@ const seedUsers = [
     id: worker3Id,
     name: "João Encanador",
     email: "joao@example.com",
-    role: "worker" as const,
     bairro: "Vila Nova",
+    cep: "01310100",
+    cidade: "São Paulo",
     passwordHash: await Bun.password.hash("senha123"),
     createdAt: now,
     updatedAt: now,
@@ -49,8 +53,9 @@ const seedUsers = [
     id: client1Id,
     name: "Maria Cliente",
     email: "maria@example.com",
-    role: "client" as const,
     bairro: "Centro",
+    cep: "01310100",
+    cidade: "São Paulo",
     passwordHash: await Bun.password.hash("senha123"),
     createdAt: now,
     updatedAt: now,
@@ -59,8 +64,9 @@ const seedUsers = [
     id: client2Id,
     name: "Pedro Cliente",
     email: "pedro@example.com",
-    role: "client" as const,
     bairro: "Jardim América",
+    cep: "01310100",
+    cidade: "São Paulo",
     passwordHash: await Bun.password.hash("senha123"),
     createdAt: now,
     updatedAt: now,
@@ -192,20 +198,49 @@ const seedMediaPhotos = [
 async function seed() {
   console.log("🌱 Iniciando seed...");
 
+  console.log("  → Limpando dados anteriores do seed...");
+
+  const seedEmails = [
+    "carlos@example.com",
+    "ana@example.com",
+    "joao@example.com",
+    "maria@example.com",
+    "pedro@example.com",
+  ];
+
+  // Busca todos os IDs dos usuários de seed (por ID fixo ou por email de execuções antigas)
+  const seedUserIds = [worker1Id, worker2Id, worker3Id, client1Id, client2Id];
+
+  const existingUsers = await db
+    .select({ id: users.id })
+    .from(users)
+    .where(or(inArray(users.email, seedEmails), inArray(users.id, seedUserIds)));
+
+  const existingIds = existingUsers.map((u) => u.id);
+
+  if (existingIds.length > 0) {
+    await db.delete(mediaPhotos).where(inArray(mediaPhotos.workerId, existingIds));
+    await db
+      .delete(ratings)
+      .where(or(inArray(ratings.workerId, existingIds), inArray(ratings.clientId, existingIds)));
+    await db.delete(services).where(inArray(services.workerId, existingIds));
+    await db.delete(users).where(inArray(users.id, existingIds));
+  }
+
   console.log("  → Inserindo categorias...");
   await db.insert(categories).values(seedCategories).onConflictDoNothing();
 
   console.log("  → Inserindo usuários...");
-  await db.insert(users).values(seedUsers).onConflictDoNothing();
+  await db.insert(users).values(seedUsers);
 
   console.log("  → Inserindo serviços...");
-  await db.insert(services).values(seedServices).onConflictDoNothing();
+  await db.insert(services).values(seedServices);
 
   console.log("  → Inserindo avaliações...");
-  await db.insert(ratings).values(seedRatings).onConflictDoNothing();
+  await db.insert(ratings).values(seedRatings);
 
   console.log("  → Inserindo fotos de portfólio...");
-  await db.insert(mediaPhotos).values(seedMediaPhotos).onConflictDoNothing();
+  await db.insert(mediaPhotos).values(seedMediaPhotos);
 
   console.log("✅ Seed concluído com sucesso!");
   process.exit(0);

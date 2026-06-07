@@ -1,16 +1,21 @@
 import { Elysia } from "elysia";
 import { UserController } from "../controllers/user.controller";
+import { ServiceController } from "../controllers/service.controller";
 import { requireAuth } from "../lib/auth";
 import {
   errorResponseSchema,
   protectedRouteDetail,
   safeUserSchema,
+  serviceSchema,
   updateUserBodySchema,
   userIdParamsSchema,
   validationErrorResponseSchema,
 } from "../app/openapi.schemas";
 
-export const userRoutes = (userController: UserController) =>
+export const userRoutes = (
+  userController: UserController,
+  serviceController: ServiceController,
+) =>
   new Elysia()
     .get("/users/:id", async ({ params }) => userController.getProfile(params.id), {
       params: userIdParamsSchema,
@@ -50,6 +55,23 @@ export const userRoutes = (userController: UserController) =>
           summary: "Atualizar perfil do usuário",
           description:
             "Atualiza os dados do próprio usuário autenticado. O identificador da rota deve corresponder ao usuário presente no token JWT.",
+        },
+      },
+    )
+    .get(
+      "/users/:id/services",
+      async ({ params }) => serviceController.listByUser(params.id),
+      {
+        params: userIdParamsSchema,
+        response: {
+          200: serviceSchema.array(),
+          404: errorResponseSchema,
+        },
+        detail: {
+          tags: ["Users"],
+          operationId: "getUserServices",
+          summary: "Listar serviços do usuário",
+          description: "Retorna todos os serviços publicados pelo usuário identificado pelo parâmetro de rota.",
         },
       },
     );

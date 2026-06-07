@@ -10,4 +10,17 @@ export class ServiceController {
   async create(actorId: string, body: unknown) {
     return this.serviceService.create(actorId, body);
   }
+
+  async listByUser(userId: string) {
+    return this.serviceService.listByUser(userId);
+  }
+
+  async update(serviceId: string, body: unknown, actorId: string) {
+    return this.serviceService.update(serviceId, body, actorId);
+  }
+
+  async delete(serviceId: string, actorId: string) {
+    await this.serviceService.delete(serviceId, actorId);
+    return { success: true as const };
+  }
 }

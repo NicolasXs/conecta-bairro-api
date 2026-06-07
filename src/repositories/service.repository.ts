@@ -11,6 +11,10 @@ export interface ServiceFilters {
 export interface ServiceRepository {
   create(service: Service): Promise<Service>;
   list(filters?: ServiceFilters): Promise<Service[]>;
+  findById(id: string): Promise<Service | null>;
+  findByWorkerId(workerId: string): Promise<Service[]>;
+  update(service: Service): Promise<Service>;
+  delete(id: string): Promise<void>;
 }
 
 export class InMemoryServiceRepository implements ServiceRepository {
@@ -34,5 +38,22 @@ export class InMemoryServiceRepository implements ServiceRepository {
 
       return matchesCategory && matchesBairro;
     });
+  }
+
+  async findById(id: string): Promise<Service | null> {
+    return this.services.get(id) ?? null;
+  }
+
+  async findByWorkerId(workerId: string): Promise<Service[]> {
+    return [...this.services.values()].filter((s) => s.workerId === workerId);
+  }
+
+  async update(service: Service): Promise<Service> {
+    this.services.set(service.id, service);
+    return service;
+  }
+
+  async delete(id: string): Promise<void> {
+    this.services.delete(id);
   }
 }
