@@ -1,4 +1,4 @@
-import { pgTable, text, integer, timestamp, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, integer, timestamp, jsonb, numeric } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
   id: text("id").primaryKey(),
@@ -28,6 +28,7 @@ export const services = pgTable("services", {
   bairro: text("bairro").notNull(),
   title: text("title").notNull(),
   description: text("description").notNull(),
+  price: numeric("price", { precision: 10, scale: 2 }),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

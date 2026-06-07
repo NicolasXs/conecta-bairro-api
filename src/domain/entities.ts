@@ -25,6 +25,7 @@ export interface Service {
   bairro: string;
   title: string;
   description: string;
+  price?: number;
   createdAt: Date;
 }
 

@@ -17,6 +17,7 @@ export class PostgresServiceRepository implements ServiceRepository {
         bairro: service.bairro,
         title: service.title,
         description: service.description,
+        price: service.price?.toString() ?? null,
         createdAt: service.createdAt,
       })
       .returning();
@@ -98,6 +99,7 @@ export class PostgresServiceRepository implements ServiceRepository {
         bairro: service.bairro,
         title: service.title,
         description: service.description,
+        price: service.price?.toString() ?? null,
       })
       .where(eq(services.id, service.id))
       .returning();
@@ -117,6 +119,7 @@ export class PostgresServiceRepository implements ServiceRepository {
       bairro: row.bairro,
       title: row.title,
       description: row.description,
+      price: row.price !== null ? Number(row.price) : undefined,
       createdAt: row.createdAt,
     };
   }
