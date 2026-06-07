@@ -14,6 +14,6 @@ export class InMemoryRatingRepository implements RatingRepository {
   }
 
   async listByWorkerId(workerId: string): Promise<Rating[]> {
-    return [...this.ratings.values()].filter((rating) => rating.workerId === workerId);
+    return [...this.ratings.values()].filter((r) => r.workerId === workerId);
   }
 }

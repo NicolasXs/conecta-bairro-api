@@ -18,7 +18,11 @@ export class RatingService {
 
   async create(clientId: string, input: unknown): Promise<Rating> {
     const payload = createRatingSchema.parse(input) as CreateRatingInput;
-    const worker = await this.userRepository.findById(payload.workerId);
+
+    const [worker, client] = await Promise.all([
+      this.userRepository.findById(payload.workerId),
+      this.userRepository.findById(clientId),
+    ]);
 
     if (!worker) {
       throw new AppError(404, "WORKER_NOT_FOUND", "Usuário avaliado não encontrado.");
@@ -28,6 +32,7 @@ export class RatingService {
       id: createId(),
       workerId: payload.workerId,
       clientId,
+      clientName: client!.name,
       score: payload.score,
       comment: payload.comment,
       createdAt: new Date(),

@@ -57,6 +57,7 @@ export const ratingSchema = z
     id: z.string().describe("Identificador único da avaliação."),
     workerId: z.string().describe("Prestador avaliado."),
     clientId: z.string().describe("Cliente autor da avaliação."),
+    clientName: z.string().describe("Nome do cliente autor da avaliação."),
     score: z.number().int().min(1).max(5).describe("Nota de 1 a 5."),
     comment: z
       .string()

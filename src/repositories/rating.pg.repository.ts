@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { Database } from "../db";
-import { ratings } from "../db/schema";
+import { ratings, users } from "../db/schema";
 import { Rating } from "../domain/entities";
 import { RatingRepository } from "./rating.repository";
 
@@ -20,16 +20,20 @@ export class PostgresRatingRepository implements RatingRepository {
       })
       .returning();
 
-    return this.toEntity(row);
+    return { ...this.toBaseEntity(row), clientName: rating.clientName };
   }
 
   async listByWorkerId(workerId: string): Promise<Rating[]> {
-    const rows = await this.db.select().from(ratings).where(eq(ratings.workerId, workerId));
+    const rows = await this.db
+      .select({ rating: ratings, clientName: users.name })
+      .from(ratings)
+      .innerJoin(users, eq(ratings.clientId, users.id))
+      .where(eq(ratings.workerId, workerId));
 
-    return rows.map(this.toEntity);
+    return rows.map((row) => ({ ...this.toBaseEntity(row.rating), clientName: row.clientName }));
   }
 
-  private toEntity(row: typeof ratings.$inferSelect): Rating {
+  private toBaseEntity(row: typeof ratings.$inferSelect): Omit<Rating, "clientName"> {
     return {
       id: row.id,
       workerId: row.workerId,
