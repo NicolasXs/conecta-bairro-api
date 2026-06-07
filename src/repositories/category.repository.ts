@@ -2,18 +2,23 @@ import { Category } from "../domain/entities";
 
 export interface CategoryRepository {
   list(): Promise<Category[]>;
+  create(category: Category): Promise<Category>;
+  delete(id: string): Promise<void>;
 }
 
-const defaultCategories: Category[] = [
-  { id: "cat-cleaning", name: "Cleaning" },
-  { id: "cat-electrician", name: "Electrician" },
-  { id: "cat-plumber", name: "Plumber" },
-  { id: "cat-painter", name: "Painter" },
-  { id: "cat-carpenter", name: "Carpenter" },
-];
-
 export class InMemoryCategoryRepository implements CategoryRepository {
+  private readonly categories = new Map<string, Category>();
+
   async list(): Promise<Category[]> {
-    return defaultCategories;
+    return [...this.categories.values()];
+  }
+
+  async create(category: Category): Promise<Category> {
+    this.categories.set(category.id, category);
+    return category;
+  }
+
+  async delete(id: string): Promise<void> {
+    this.categories.delete(id);
   }
 }

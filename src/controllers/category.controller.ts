@@ -6,4 +6,13 @@ export class CategoryController {
   async list() {
     return this.categoryService.list();
   }
+
+  async create(name: string) {
+    return this.categoryService.create(name);
+  }
+
+  async delete(id: string) {
+    await this.categoryService.delete(id);
+    return { success: true as const };
+  }
 }

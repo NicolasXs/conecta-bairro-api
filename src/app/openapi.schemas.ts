@@ -35,6 +35,22 @@ export const categorySchema = z
   })
   .describe("Categoria disponível para classificação de serviços.");
 
+export const createCategoryBodySchema = z
+  .object({
+    name: z.string().min(2).max(80).describe("Nome da nova categoria de serviço."),
+  })
+  .describe("Payload para criar uma nova categoria.");
+
+export const categoryIdParamsSchema = z.object({
+  id: z.string().min(1).describe("Identificador da categoria."),
+});
+
+export const deleteCategoryResponseSchema = z
+  .object({
+    success: z.literal(true).describe("Indica que a categoria foi removida com sucesso."),
+  })
+  .describe("Resposta padrão para remoção bem-sucedida de uma categoria.");
+
 export const serviceSchema = z
   .object({
     id: z.string().describe("Identificador único do serviço."),
