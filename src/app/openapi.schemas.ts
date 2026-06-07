@@ -5,6 +5,8 @@ export const safeUserSchema = z
     id: z.string().describe("Identificador único do usuário."),
     name: z.string().min(2).max(100).describe("Nome exibido no perfil."),
     email: z.email().describe("E-mail usado para autenticação e contato."),
+    avatarUrl: z.url().optional().describe("URL da imagem de avatar do usuário."),
+    coverUrl: z.url().optional().describe("URL da imagem de capa do perfil do usuário."),
     bairro: z
       .string()
       .min(2)
@@ -122,6 +124,8 @@ export const authResponseSchema = z
 export const updateUserBodySchema = z
   .object({
     name: z.string().min(2).max(100).optional().describe("Novo nome do usuário."),
+    avatarUrl: z.url().optional().nullable().describe("Nova URL do avatar. Envie null para remover."),
+    coverUrl: z.url().optional().nullable().describe("Nova URL da capa. Envie null para remover."),
     bairro: z.string().min(2).max(120).optional().describe("Novo bairro associado ao perfil."),
     cep: z.string().optional().describe("Novo CEP do usuário."),
     cidade: z.string().optional().describe("Nova cidade do usuário."),

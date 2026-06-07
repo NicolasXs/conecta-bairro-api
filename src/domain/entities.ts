@@ -2,6 +2,8 @@ export interface User {
   id: string;
   name: string;
   email: string;
+  avatarUrl?: string;
+  coverUrl?: string;
   bairro?: string;
   cep?: string;
   cidade?: string;

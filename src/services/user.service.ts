@@ -44,6 +44,8 @@ export class UserService {
     const updatedUser: User = {
       ...user,
       name: payload.name ?? user.name,
+      avatarUrl: payload.avatarUrl === null ? undefined : (payload.avatarUrl ?? user.avatarUrl),
+      coverUrl: payload.coverUrl === null ? undefined : (payload.coverUrl ?? user.coverUrl),
       bairro: payload.bairro ?? user.bairro,
       cep: payload.cep ?? user.cep,
       cidade: payload.cidade ?? user.cidade,

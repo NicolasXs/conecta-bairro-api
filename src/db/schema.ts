@@ -7,6 +7,8 @@ export const users = pgTable("users", {
   bairro: text("bairro"),
   cep: text("cep"),
   cidade: text("cidade"),
+  avatarUrl: text("avatar_url"),
+  coverUrl: text("cover_url"),
   description: text("description"),
   contactLinks: jsonb("contact_links").$type<Array<{ label: string; value: string }>>(),
   passwordHash: text("password_hash").notNull(),

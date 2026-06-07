@@ -15,6 +15,13 @@
       "when": 1779835783451,
       "tag": "0001_fresh_gamora",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1780861394034,
+      "tag": "0002_overrated_doctor_faustus",
+      "breakpoints": true
     }
   ]
 }
