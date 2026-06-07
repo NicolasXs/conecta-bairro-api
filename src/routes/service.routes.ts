@@ -1,17 +1,33 @@
-import { Elysia } from "elysia";
+import { Elysia, t } from "elysia";
 import { ServiceController } from "../controllers/service.controller";
 import { requireAuth } from "../lib/auth";
 import {
   deleteServiceResponseSchema,
   errorResponseSchema,
   protectedRouteDetail,
-  serviceCreateBodySchema,
   serviceIdParamsSchema,
   serviceListQuerySchema,
   serviceSchema,
-  serviceUpdateBodySchema,
   validationErrorResponseSchema,
 } from "../app/openapi.schemas";
+
+const priceField = t.Optional(t.Union([t.Number({ exclusiveMinimum: 0 }), t.Null()]));
+
+const serviceCreateBody = t.Object({
+  category: t.String({ minLength: 2, maxLength: 80 }),
+  bairro: t.String({ minLength: 2, maxLength: 120 }),
+  title: t.String({ minLength: 2, maxLength: 120 }),
+  description: t.String({ minLength: 2, maxLength: 500 }),
+  price: priceField,
+});
+
+const serviceUpdateBody = t.Object({
+  category: t.Optional(t.String({ minLength: 2, maxLength: 80 })),
+  bairro: t.Optional(t.String({ minLength: 2, maxLength: 120 })),
+  title: t.Optional(t.String({ minLength: 2, maxLength: 120 })),
+  description: t.Optional(t.String({ minLength: 2, maxLength: 500 })),
+  price: priceField,
+});
 
 export const serviceRoutes = (serviceController: ServiceController) =>
   new Elysia()
@@ -38,7 +54,7 @@ export const serviceRoutes = (serviceController: ServiceController) =>
         return service;
       },
       {
-        body: serviceCreateBodySchema,
+        body: serviceCreateBody,
         response: {
           201: serviceSchema,
           400: validationErrorResponseSchema,
@@ -52,7 +68,7 @@ export const serviceRoutes = (serviceController: ServiceController) =>
           operationId: "createService",
           summary: "Publicar serviço",
           description:
-            "Permite que um usuário autenticado com papel worker publique um novo serviço na plataforma.",
+            "Permite que um usuário autenticado publique um novo serviço na plataforma.",
         },
       },
     )
@@ -64,7 +80,7 @@ export const serviceRoutes = (serviceController: ServiceController) =>
       },
       {
         params: serviceIdParamsSchema,
-        body: serviceUpdateBodySchema,
+        body: serviceUpdateBody,
         response: {
           200: serviceSchema,
           400: validationErrorResponseSchema,
