@@ -20,17 +20,25 @@ export class PostgresRatingRepository implements RatingRepository {
       })
       .returning();
 
-    return { ...this.toBaseEntity(row), clientName: rating.clientName };
+    return {
+      ...this.toBaseEntity(row),
+      clientName: rating.clientName,
+      clientAvatarUrl: rating.clientAvatarUrl,
+    };
   }
 
   async listByWorkerId(workerId: string): Promise<Rating[]> {
     const rows = await this.db
-      .select({ rating: ratings, clientName: users.name })
+      .select({ rating: ratings, clientName: users.name, clientAvatarUrl: users.avatarUrl })
       .from(ratings)
       .innerJoin(users, eq(ratings.clientId, users.id))
       .where(eq(ratings.workerId, workerId));
 
-    return rows.map((row) => ({ ...this.toBaseEntity(row.rating), clientName: row.clientName }));
+    return rows.map((row) => ({
+      ...this.toBaseEntity(row.rating),
+      clientName: row.clientName,
+      clientAvatarUrl: row.clientAvatarUrl ?? undefined,
+    }));
   }
 
   private toBaseEntity(row: typeof ratings.$inferSelect): Omit<Rating, "clientName"> {

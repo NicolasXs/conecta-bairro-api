@@ -36,6 +36,7 @@ export interface Rating {
   workerId: string;
   clientId: string;
   clientName: string;
+  clientAvatarUrl?: string;
   score: number;
   comment?: string;
   createdAt: Date;

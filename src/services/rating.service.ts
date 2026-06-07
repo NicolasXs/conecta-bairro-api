@@ -33,6 +33,7 @@ export class RatingService {
       workerId: payload.workerId,
       clientId,
       clientName: client!.name,
+      clientAvatarUrl: client!.avatarUrl,
       score: payload.score,
       comment: payload.comment,
       createdAt: new Date(),
