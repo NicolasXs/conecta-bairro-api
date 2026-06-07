@@ -40,7 +40,7 @@ export class ServiceService {
       bairro: payload.bairro,
       title: payload.title,
       description: payload.description,
-      price: payload.price,
+      price: payload.price ?? undefined,
       createdAt: new Date(),
     };
 
@@ -74,7 +74,7 @@ export class ServiceService {
       bairro: payload.bairro ?? service.bairro,
       title: payload.title ?? service.title,
       description: payload.description ?? service.description,
-      price: payload.price ?? service.price,
+      price: payload.price !== undefined ? (payload.price ?? undefined) : service.price,
     };
 
     return this.serviceRepository.update(updated);

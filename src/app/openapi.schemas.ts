@@ -155,7 +155,7 @@ export const serviceCreateBodySchema = z
       .min(2)
       .max(500)
       .describe("Descrição detalhada com escopo, diferenciais e informações úteis."),
-    price: z.number().positive().optional().describe("Valor cobrado pelo serviço (opcional)."),
+    price: z.number().positive().nullish().describe("Valor cobrado pelo serviço (opcional)."),
   })
   .describe("Dados necessários para publicar um novo serviço.");
 
@@ -234,7 +234,7 @@ export const serviceUpdateBodySchema = z
     bairro: z.string().min(2).max(120).optional().describe("Novo bairro atendido."),
     title: z.string().min(2).max(120).optional().describe("Novo título do anúncio."),
     description: z.string().min(2).max(500).optional().describe("Nova descrição do serviço."),
-    price: z.number().positive().optional().describe("Novo valor cobrado pelo serviço."),
+    price: z.number().positive().nullish().describe("Novo valor cobrado pelo serviço."),
   })
   .describe("Campos permitidos para atualizar um serviço publicado.");
 
