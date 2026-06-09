@@ -67,6 +67,7 @@ export const serviceSchema = z
     title: z.string().min(2).max(120).describe("Título curto usado na listagem."),
     description: z.string().min(2).max(500).describe("Descrição detalhada do serviço oferecido."),
     price: z.number().positive().optional().describe("Valor cobrado pelo serviço (opcional)."),
+    imageUrl: z.url().optional().describe("URL da imagem de capa do serviço."),
     createdAt: z.date().describe("Data de publicação do serviço."),
   })
   .describe("Anúncio de serviço publicado por um prestador.");
@@ -161,6 +162,7 @@ export const serviceCreateBodySchema = z
       .max(500)
       .describe("Descrição detalhada com escopo, diferenciais e informações úteis."),
     price: z.number().positive().nullish().describe("Valor cobrado pelo serviço (opcional)."),
+    imageUrl: z.url().optional().describe("URL da imagem de capa do serviço."),
   })
   .describe("Dados necessários para publicar um novo serviço.");
 
@@ -242,6 +244,7 @@ export const serviceUpdateBodySchema = z
     title: z.string().min(2).max(120).optional().describe("Novo título do anúncio."),
     description: z.string().min(2).max(500).optional().describe("Nova descrição do serviço."),
     price: z.number().positive().nullish().describe("Novo valor cobrado pelo serviço."),
+    imageUrl: z.url().nullish().describe("Nova URL da imagem de capa do serviço."),
   })
   .describe("Campos permitidos para atualizar um serviço publicado.");
 

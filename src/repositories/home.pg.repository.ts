@@ -21,6 +21,8 @@ export class PostgresHomeRepository implements HomeRepository {
         bairro: services.bairro,
         title: services.title,
         description: services.description,
+        price: services.price,
+        imageUrl: services.imageUrl,
         createdAt: services.createdAt,
         avgScore: avg(ratings.score),
         ratingCount: count(ratings.id),
@@ -34,6 +36,8 @@ export class PostgresHomeRepository implements HomeRepository {
 
     return rows.map((row) => ({
       ...row,
+      price: row.price !== null ? Number(row.price) : undefined,
+      imageUrl: row.imageUrl ?? undefined,
       avgScore: row.avgScore ? Number(row.avgScore) : 0,
       ratingCount: Number(row.ratingCount),
     }));
@@ -60,6 +64,8 @@ export class PostgresHomeRepository implements HomeRepository {
         bairro: services.bairro,
         title: services.title,
         description: services.description,
+        price: services.price,
+        imageUrl: services.imageUrl,
         createdAt: services.createdAt,
         avgScore: avg(ratings.score),
         ratingCount: count(ratings.id),
@@ -74,6 +80,8 @@ export class PostgresHomeRepository implements HomeRepository {
 
     return rows.map((row) => ({
       ...row,
+      price: row.price !== null ? Number(row.price) : undefined,
+      imageUrl: row.imageUrl ?? undefined,
       avgScore: row.avgScore ? Number(row.avgScore) : 0,
       ratingCount: Number(row.ratingCount),
     }));

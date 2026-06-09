@@ -41,6 +41,7 @@ export class ServiceService {
       title: payload.title,
       description: payload.description,
       price: payload.price ?? undefined,
+      imageUrl: payload.imageUrl ?? undefined,
       createdAt: new Date(),
     };
 
@@ -75,6 +76,7 @@ export class ServiceService {
       title: payload.title ?? service.title,
       description: payload.description ?? service.description,
       price: payload.price !== undefined ? (payload.price ?? undefined) : service.price,
+      imageUrl: payload.imageUrl !== undefined ? (payload.imageUrl ?? undefined) : service.imageUrl,
     };
 
     return this.serviceRepository.update(updated);

@@ -31,6 +31,7 @@ export const services = pgTable("services", {
   title: text("title").notNull(),
   description: text("description").notNull(),
   price: numeric("price", { precision: 10, scale: 2 }),
+  imageUrl: text("image_url"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
